@@ -77,24 +77,24 @@ class FlickrComSpider(CrawlSpider):
                 container = ptitle.select("./ancestor::div[@class='hover-target']")
                 img = container.select(".//img/@src")[0].extract()
                 img_big = img.replace("_m.jpg", "_b.jpg")
-                self.index[text].append((img_big, img))
+                self.index[self.species].append((img_big, img))
 
         links = self.link_extractor.extract_links(response)
         for link in links:
             yield self.make_request(link.url)
 
     def spider_closed(self):
-        numrows = lambda x: x / 4 + (1 if x % 4 else 0)
-        for key, img_list in self.index.items():
-            safekey = safe_url_string(key)
-            buff = open(os.path.join(os.environ.get("HOME"), "Dropbox/Public/plantae/slides/%s.html" % safekey), "w")
-            print >> buff, _INITIAL_BUFF
-            for img_big, img in img_list[::-1]:
+        safekey = safe_url_string(self.species)
+        buff = open(os.path.join(os.environ.get("HOME"), "Dropbox/Public/plantae/slides/%s.html" % safekey), "w")
+        print >> buff, _INITIAL_BUFF
+        for key in sorted(self.index):
+            img_list = self.index[key]
+            print >> buff, "<p>"
+            for img_big, img in img_list:
                 line = '<a href="%s" class="highslide" onclick="return hs.expand(this)"><img src="%s" /></a>' % (img_big, img)
                 print >> buff, line
+            print >> buff, "</p>"
 
-            rows = numrows(len(img_list))
-            height = 250 * rows
+        self.log("key %s: %s" % (safekey, '<embed src="http://dl.dropbox.com/u/12683952/plantae/slides/%s.html" height="768" width="1000" />' % safekey))
+        buff.close()
 
-            self.log("key %s: %s" % (key, '<embed src="http://dl.dropbox.com/u/12683952/plantae/slides/%s.html" height="%d" width="1000" />' % (safekey, height)))
-            buff.close()
