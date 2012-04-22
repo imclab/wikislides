@@ -55,7 +55,6 @@ class FlickrComSpider(CrawlSpider):
         self.buff = open(os.path.join(os.environ.get("HOME"), "Dropbox/Public/plantae/slides/%s.html" % species.replace(" ", "_")), "w")
         self.buff.write(_INITIAL_BUFF)
         CrawlSpider.__init__(self, **kwargs)
-        self.column = cycle([1, 2, 3])
 
     def start_requests(self):
         for url in self.start_urls:
