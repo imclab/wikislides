@@ -1,13 +1,19 @@
-from itertools import cycle
 import os
-from urlparse import urljoin
+from collections import defaultdict
 
 from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.contrib.spiders import CrawlSpider, Rule
+from scrapy.contrib.spiders import CrawlSpider
 from scrapy.exceptions import NotConfigured
 from scrapy.http import Request
-from scrapy.conf import settings
+
+from scrapy.xlib.pydispatch import dispatcher
+from scrapy import signals
+
+def safe_url_string(link):
+    link = link.replace(" ", "_")
+    link = link.replace("#", "-")
+    return link
 
 _INITIAL_BUFF = """
 <script type="text/javascript" src="http://dl.dropbox.com/u/12683952/highslide/highslide.js"></script>
@@ -52,9 +58,9 @@ class FlickrComSpider(CrawlSpider):
         if species is None:
             raise NotConfigured
         self.species = species.lower()
-        self.buff = open(os.path.join(os.environ.get("HOME"), "Dropbox/Public/plantae/slides/%s.html" % species.replace(" ", "_")), "w")
-        self.buff.write(_INITIAL_BUFF)
         CrawlSpider.__init__(self, **kwargs)
+        dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
+        self.index = defaultdict(list)
 
     def start_requests(self):
         for url in self.start_urls:
@@ -71,10 +77,19 @@ class FlickrComSpider(CrawlSpider):
                 container = ptitle.select("./ancestor::div[@class='hover-target']")
                 img = container.select(".//img/@src")[0].extract()
                 img_big = img.replace("_m.jpg", "_b.jpg")
-                buff = '<a href="%s" class="highslide" onclick="return hs.expand(this)"><img src="%s" /></a>\n' % (img_big, img)
-                self.buff.write(buff)
+                self.index[text].append((img_big, img))
 
         links = self.link_extractor.extract_links(response)
         for link in links:
             yield self.make_request(link.url)
 
+    def spider_closed(self):
+        for key, img_list in self.index.items():
+            safekey = safe_url_string(key)
+            buff = open(os.path.join(os.environ.get("HOME"), "Dropbox/Public/plantae/slides/%s.html" % safekey), "w")
+            print >> buff, _INITIAL_BUFF
+            for img_big, img in img_list[::-1]:
+                line = '<a href="%s" class="highslide" onclick="return hs.expand(this)"><img src="%s" /></a>' % (img_big, img)
+                print >> buff, line
+            self.log("key %s: %s" % (key, '<embed src="http://dl.dropbox.com/u/12683952/plantae/slides/%s.html" height="768" width="1024" />' % safekey))
+            buff.close()
