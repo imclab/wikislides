@@ -35,9 +35,7 @@ def process_text(text):
         if newlevel > 0:
             print >> buff, "</li>"
         level = newlevel
-    while level:
-        print >> buff, "</ul>"
-        level -= 1
+    print >> buff, "</ul>" * level
 
     buff.reset()
     return buff.read()
