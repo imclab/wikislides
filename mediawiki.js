@@ -37,7 +37,7 @@
     var process_text = function(text) {
         var buff = "",
             level = 0;
-        text.split("/[\r\n]+/").forEach(function(line) {
+        text.split(/[\r\n]+/).forEach(function(line) {
             var result = process_line(line);
             var newlevel = result[0];
             line = result[1];
@@ -61,7 +61,6 @@
     }
 
     window.onload = function(e) {
-        console.log("here")
         var wikiareas = document.getElementsByClassName("wikiarea");
         for (var i=0; i < wikiareas.length; i++)
             wikiareas[i].wiki2Html();
