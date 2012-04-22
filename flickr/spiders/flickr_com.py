@@ -84,6 +84,7 @@ class FlickrComSpider(CrawlSpider):
             yield self.make_request(link.url)
 
     def spider_closed(self):
+        numrows = lambda x: x / 4 + (1 if x % 4 else 0)
         for key, img_list in self.index.items():
             safekey = safe_url_string(key)
             buff = open(os.path.join(os.environ.get("HOME"), "Dropbox/Public/plantae/slides/%s.html" % safekey), "w")
@@ -91,5 +92,9 @@ class FlickrComSpider(CrawlSpider):
             for img_big, img in img_list[::-1]:
                 line = '<a href="%s" class="highslide" onclick="return hs.expand(this)"><img src="%s" /></a>' % (img_big, img)
                 print >> buff, line
-            self.log("key %s: %s" % (key, '<embed src="http://dl.dropbox.com/u/12683952/plantae/slides/%s.html" height="768" width="1024" />' % safekey))
+
+            rows = numrows(len(img_list))
+            height = 250 * rows
+
+            self.log("key %s: %s" % (key, '<embed src="http://dl.dropbox.com/u/12683952/plantae/slides/%s.html" height="%d" width="1000" />' % (safekey, height)))
             buff.close()
