@@ -15,12 +15,16 @@
     }
 
     var _LIST_RE = /\*+/,
-        _WIKI_RE = /\[\[w\|(.*?)\]\]/g;
+        _WIKI_RE = /\[\[w\|(.*?)\]\]/g,
+        _LABEL_RE = /\[\[l\|(.*?)\]\]/g;
 
     var format_line = function(line) {
         var line = line.replace(_LIST_RE, "");
         line = line.replace(_WIKI_RE, function(m, l) {
             return "<a target='_blank' href='http://es.wikipedia.com/wiki/" + l + "'>" + l + "</a>"
+        });
+        line = line.replace(_LABEL_RE, function(m, l) {
+            return "<a href='http://naturalothlorien.blogspot.com/search/label/" + l + "'>" + l + "</a>"
         });
         return line;
     }
