@@ -35,7 +35,8 @@
         _WIKI_RE = /\[\[w\|(.+?)\]\]/g,
         _LABEL_RE = /\[\[l\|(.+?)\]\]/g,
         _HEADER_RE = /^(=+)(.+?)(=+)/,
-        _BOLD_RE = /\*\*([^\*^\s][^\*]*?)\*\*/;
+        _BOLD_RE = /\*\*([^\*^\s][^\*]*?)\*\*/,
+        _ITALIC_RE = /\/\/(.+?)\/\//;
 
     var format_line = function(line) {
         line = line.replace(_HEADER_RE, function(m, p, l, s) {
@@ -52,8 +53,10 @@
             return "<a href='http://naturalothlorien.blogspot.com/search/label/" + l + "'>" + l + "</a>";
         });
         line = line.replace(_BOLD_RE, function(m, l) {
-            console.log(line);
             return "<b>" + l + "</b>";
+        });
+        line = line.replace(_ITALIC_RE, function(m, l) {
+            return "<i>" + l + "</l>";
         });
         return line;
     }
