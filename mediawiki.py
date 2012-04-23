@@ -6,10 +6,12 @@ import sys
 
 _LIST_RE = re.compile("\*+")
 _WIKI_RE = re.compile("\[\[w\|(.*?)\]\]")
+_LABEL_RE = re.compile("\[\[l\|(.*?)\]\]")
 
 def format_line(line):
     line = _LIST_RE.sub("", line)
     line = _WIKI_RE.sub("<a target='_blank' href='http://es.wikipedia.com/wiki/\g<1>'>\g<1></a>", line)
+    line = _LABEL_RE.sub("<a target='_blank' href=''http://naturalothlorien.blogspot.com/search/label/\g<1>'>\g<1></a>", line)
     return line
 
 def process_line(line):
