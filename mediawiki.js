@@ -66,9 +66,10 @@
             level = 0;
         line = format_line(line);
         var m = _LIST_RE.exec(line);
-        if (m)
+        if (m) {
             level = m[0].length;
-        line = line.replace(_LIST_RE, "");
+            line = line.replace(_LIST_RE, "");
+        } else line = "<p>" + line + "</p>";
         return [level, line];
     }
 
