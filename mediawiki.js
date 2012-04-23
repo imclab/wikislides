@@ -57,7 +57,7 @@
     }
 
     var process_text = function(text) {
-        var buff = "<style>.wikiicon {background:transparent !important;padding:8 !important;}</style>",
+        var buff = "<style>.wikiicon {background:transparent !important;padding:0 !important;}</style>",
             level = 0;
         text.split(/[\r\n]+/).forEach(function(line) {
             var result = process_line(line);
