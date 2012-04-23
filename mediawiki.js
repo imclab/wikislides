@@ -31,18 +31,29 @@
         return buff + str + "\n";
     }
 
-    var _LIST_RE = /\*+/,
+    var _LIST_RE = /^\*+/,
         _WIKI_RE = /\[\[w\|(.*?)\]\]/g,
-        _LABEL_RE = /\[\[l\|(.*?)\]\]/g;
+        _LABEL_RE = /\[\[l\|(.*?)\]\]/g,
+        _HEADER_RE = /^(=+)(.*?)(=+)/,
+        _BOLD_RE = /\*\*(.*?)\*\*/;
 
     var format_line = function(line) {
+//         line = line.replace(_BOLD_RE, function(m ,l) {
+//             return "<b>" + l + "</b>";
+//         });
         var line = line.replace(_LIST_RE, "");
+        line = line.replace(_HEADER_RE, function(m, p, l, s) {
+            if (p.length == s.length && p.length < 6) {
+                return "<h" + p.length + ">" + l + "</h" + p.length + ">";
+            };
+            return line;
+        });
         line = line.replace(_WIKI_RE, function(m, l) {
             return "<a target='_blank' href='http://es.wikipedia.com/wiki/" + l + "'>" + l +
-                   "</a><img class='wikiicon' src='http://dl.dropbox.com/u/12683952/plantae/slides/Wikipedia-icon16.png' />"
+                   "</a><img class='wikiicon' src='http://dl.dropbox.com/u/12683952/plantae/slides/Wikipedia-icon16.png' />";
         });
         line = line.replace(_LABEL_RE, function(m, l) {
-            return "<a href='http://naturalothlorien.blogspot.com/search/label/" + l + "'>" + l + "</a>"
+            return "<a href='http://naturalothlorien.blogspot.com/search/label/" + l + "'>" + l + "</a>";
         });
         return line;
     }
