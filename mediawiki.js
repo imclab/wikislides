@@ -1,3 +1,19 @@
+/*
+ * By Kalessin https://github.com/kalessin
+ * Intructions
+ * - Add this script in an html/javascript blogger widget
+ * - Add following code in post-body in template source:
+ *       <script type='text/javascript'>
+ *             var post = document.getElementById(&#39;post-body-&#39; + &#39;<data:post.id/>&#39;),
+ *                 wiki = post.getElementsByClassName(&quot;wikiarea&quot;)[0];
+ *             if (wiki) wiki.wiki2Html();
+ *       </script>
+ *
+ * Supported:
+ * - lists
+ * - [[w|<keyword>]] - convert to wikimedia link
+ * - [[l|<keyword>]] - convert to blog label link
+*/
 (function() {
 
     stringMul = function(str, num) {
