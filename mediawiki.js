@@ -64,9 +64,9 @@
         this.innerHTML = process_text(this.textContent);
     }
 
-    window.onload = function(e) {
+/*    window.onload = function(e) {
         var wikiareas = document.getElementsByClassName("wikiarea");
         for (var i=0; i < wikiareas.length; i++)
             wikiareas[i].wiki2Html();
-    }
+    }*/
 })();
