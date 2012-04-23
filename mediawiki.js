@@ -39,6 +39,9 @@
         _ITALIC_RE = /\/\/(.+?)\/\//;
 
     var format_line = function(line) {
+        line = line.replace(_ITALIC_RE, function(m, l) {
+            return "<i>" + l + "</i>";
+        });
         line = line.replace(_HEADER_RE, function(m, p, l, s) {
             if (p.length == s.length && p.length < 6) {
                 return "<h" + p.length + ">" + l + "</h" + p.length + ">";
@@ -54,9 +57,6 @@
         });
         line = line.replace(_BOLD_RE, function(m, l) {
             return "<b>" + l + "</b>";
-        });
-        line = line.replace(_ITALIC_RE, function(m, l) {
-            return "<i>" + l + "</l>";
         });
         return line;
     }
