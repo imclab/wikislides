@@ -38,7 +38,8 @@
     var format_line = function(line) {
         var line = line.replace(_LIST_RE, "");
         line = line.replace(_WIKI_RE, function(m, l) {
-            return "<a target='_blank' href='http://es.wikipedia.com/wiki/" + l + "'>" + l + "</a><img src='http://dl.dropbox.com/u/12683952/plantae/slides/Wikipedia-icon16.png'/>"
+            return "<a target='_blank' href='http://es.wikipedia.com/wiki/" + l + "'>" + l +
+                   "</a><img class='wikiicon' src='http://dl.dropbox.com/u/12683952/plantae/slides/Wikipedia-icon16.png' />"
         });
         line = line.replace(_LABEL_RE, function(m, l) {
             return "<a href='http://naturalothlorien.blogspot.com/search/label/" + l + "'>" + l + "</a>"
@@ -56,7 +57,7 @@
     }
 
     var process_text = function(text) {
-        var buff = "",
+        var buff = "<style>.wikiicon {background:transparent;padding:8;}</style>",
             level = 0;
         text.split(/[\r\n]+/).forEach(function(line) {
             var result = process_line(line);
