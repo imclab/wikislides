@@ -45,11 +45,13 @@
         _LINK_RE = /\[\[@(.+?)\|(.+?)\]\]/;
 
     var format_line = function(line) {
+        var insertParagraph = true;
         line = line.replace(_ITALIC_RE, function(m, l) {
             return "<i>" + l + "</i>";
         });
         line = line.replace(_HEADER_RE, function(m, p, l, s) {
             if (p.length == s.length && p.length < 6) {
+                insertParagraph = false;
                 return "<h" + p.length + ">" + l + "</h" + p.length + ">";
             };
             return line;
@@ -67,18 +69,19 @@
         line = line.replace(_BOLD_RE, function(m, l) {
             return "<b>" + l + "</b>";
         });
-        return line;
+        return [line, insertParagraph];
     }
 
     var process_line = function(line) {
-        var line = line.trim(),
-            level = 0;
-        line = format_line(line);
+        var level = 0,
+            fresult = format_line(line.trim()),
+            line = fresult[0],
+            insertParagraph = fresult[1];
         var m = _LIST_RE.exec(line);
         if (m) {
             level = m[0].length;
             line = line.replace(_LIST_RE, "");
-        } else line = "<p>" + line + "</p>";
+        } else if (insertParagraph) line = "<p>" + line + "</p>";
         return [level, line];
     }
 
