@@ -1,4 +1,5 @@
 /*
+ * Javascript Wikimedia formatter
  * By Kalessin https://github.com/kalessin
  * Intructions
  * - Add this script in an html/javascript blogger widget:
@@ -11,9 +12,13 @@
  *       </script>
  *
  * Supported:
- * - lists
+ * - * lists
  * - [[w|<keyword>]] - convert to wikimedia link
  * - [[l|<keyword>]] - convert to blog label link
+ * - **bold**
+ * - //italic//
+ * - == headers ==
+ * - [[@<link>|<link text>]] generic links
 */
 (function() {
 
@@ -36,7 +41,8 @@
         _LABEL_RE = /\[\[l\|(.+?)\]\]/g,
         _HEADER_RE = /^(=+)(.+?)(=+)/,
         _BOLD_RE = /\*\*([^\*^\s][^\*]*?)\*\*/,
-        _ITALIC_RE = /\/\/(.+?)\/\//;
+        _ITALIC_RE = /\/\/(.+?)\/\//,
+        _LINK_RE = /\[\[@(.+?)\|(.+?)\]\]/;
 
     var format_line = function(line) {
         line = line.replace(_ITALIC_RE, function(m, l) {
@@ -54,6 +60,9 @@
         });
         line = line.replace(_LABEL_RE, function(m, l) {
             return "<a href='http://naturalothlorien.blogspot.com/search/label/" + l + "'>" + l + "</a>";
+        });
+        line = line.replace(_LINK_RE, function(m, l, t) {
+            return "<a target='_blank' href='" + l + "'>" + t + "</a>";
         });
         line = line.replace(_BOLD_RE, function(m, l) {
             return "<b>" + l + "</b>";
