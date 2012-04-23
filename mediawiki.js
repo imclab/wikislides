@@ -1,7 +1,8 @@
 /*
  * By Kalessin https://github.com/kalessin
  * Intructions
- * - Add this script in an html/javascript blogger widget
+ * - Add this script in an html/javascript blogger widget:
+ *   <script type="text/javascript" src="https://github.com/kalessin/wikislides/raw/master/mediawiki.js"></script>
  * - Add following code in post-body in template source:
  *       <script type='text/javascript'>
  *             var post = document.getElementById(&#39;post-body-&#39; + &#39;<data:post.id/>&#39;),
