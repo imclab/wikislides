@@ -73,8 +73,8 @@
     }
 
     var process_line = function(line) {
-        var level = 0,
-            fresult = format_line(line.trim()),
+        var level = 0;
+            fresult = format_line(line),
             line = fresult[0],
             insertParagraph = fresult[1];
         var m = _LIST_RE.exec(line);
@@ -89,19 +89,22 @@
         var buff = "<style>.wikiicon {background:transparent !important;padding:0 !important;}</style>",
             level = 0;
         text.split(/[\r\n]+/).forEach(function(line) {
-            var result = process_line(line);
-            var newlevel = result[0];
-            line = result[1];
-            if (newlevel > level)
-                buff = print(buff, stringMul("<ul>", newlevel - level));
-            else if (newlevel < level)
-                buff = print(buff, stringMul("</ul>", level - newlevel));
-            if (newlevel > 0)
-                buff = print(buff, "<li>");
-            buff = print(buff, line);
-            if (newlevel > 0)
-                buff = print(buff, "</li>");
-            level = newlevel;
+            line = line.trim();
+            if (line) {
+                var result = process_line(line);
+                var newlevel = result[0];
+                line = result[1];
+                if (newlevel > level)
+                    buff = print(buff, stringMul("<ul>", newlevel - level));
+                else if (newlevel < level)
+                    buff = print(buff, stringMul("</ul>", level - newlevel));
+                if (newlevel > 0)
+                    buff = print(buff, "<li>");
+                buff = print(buff, line);
+                if (newlevel > 0)
+                    buff = print(buff, "</li>");
+                level = newlevel;
+            }
         });
         buff = print(buff, stringMul("</ul>", level));
         return buff;
