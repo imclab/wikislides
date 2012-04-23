@@ -32,16 +32,12 @@
     }
 
     var _LIST_RE = /^\*+/,
-        _WIKI_RE = /\[\[w\|(.*?)\]\]/g,
-        _LABEL_RE = /\[\[l\|(.*?)\]\]/g,
-        _HEADER_RE = /^(=+)(.*?)(=+)/,
-        _BOLD_RE = /\*\*(.*?)\*\*/;
+        _WIKI_RE = /\[\[w\|(.+?)\]\]/g,
+        _LABEL_RE = /\[\[l\|(.+?)\]\]/g,
+        _HEADER_RE = /^(=+)(.+?)(=+)/,
+        _BOLD_RE = /\*\*([^\*^\s][^\*]*?)\*\*/;
 
     var format_line = function(line) {
-//         line = line.replace(_BOLD_RE, function(m ,l) {
-//             return "<b>" + l + "</b>";
-//         });
-        var line = line.replace(_LIST_RE, "");
         line = line.replace(_HEADER_RE, function(m, p, l, s) {
             if (p.length == s.length && p.length < 6) {
                 return "<h" + p.length + ">" + l + "</h" + p.length + ">";
@@ -55,16 +51,22 @@
         line = line.replace(_LABEL_RE, function(m, l) {
             return "<a href='http://naturalothlorien.blogspot.com/search/label/" + l + "'>" + l + "</a>";
         });
+        line = line.replace(_BOLD_RE, function(m, l) {
+            console.log(line);
+            return "<b>" + l + "</b>";
+        });
         return line;
     }
 
     var process_line = function(line) {
         var line = line.trim(),
-            level = 0,
-            m = _LIST_RE.exec(line);
+            level = 0;
+        line = format_line(line);
+        var m = _LIST_RE.exec(line);
         if (m)
             level = m[0].length;
-        return [level, format_line(line)];
+        line = line.replace(_LIST_RE, "");
+        return [level, line];
     }
 
     var process_text = function(text) {
