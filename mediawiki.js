@@ -58,7 +58,7 @@
         });
         line = line.replace(_WIKI_RE, function(m, l) {
             return "<a target='_blank' href='http://es.wikipedia.com/wiki/" + l + "'>" + l +
-                   "</a><img class='wikiicon' src='http://dl.dropbox.com/u/12683952/plantae/slides/Wikipedia-icon16.png' />";
+                   "</a> <img class='wikiicon' src='http://dl.dropbox.com/u/12683952/plantae/slides/Wikipedia-icon16.png' />";
         });
         line = line.replace(_LABEL_RE, function(m, l) {
             return "<a href='http://naturalothlorien.blogspot.com/search/label/" + l + "'>" + l + "</a>";
