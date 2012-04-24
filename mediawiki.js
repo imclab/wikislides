@@ -20,6 +20,7 @@
  * - == headers ==
  * - [[@<link>|<link text>]] generic links
  * - -- horizontal rule
+ * - [<num>] superscript
 */
 (function() {
 
@@ -44,6 +45,7 @@
         _BOLD_RE = /\*\*([^\*^\s][^\*]*?)\*\*/,
         _ITALIC_RE = /\/\/(.+?)\/\//,
         _LINK_RE = /\[\[@(.+?)\|(.+?)\]\]/;
+        _SUP_RE = /\[(\d+)\]/
 
     var format_line = function(line) {
         var insertParagraph = true;
@@ -69,6 +71,9 @@
         });
         line = line.replace(_BOLD_RE, function(m, l) {
             return "<b>" + l + "</b>";
+        });
+        line = line.replace(_SUP_RE, function(m, l) {
+            return "<sup>" + l + "</sup>";
         });
         return [line, insertParagraph];
     }
