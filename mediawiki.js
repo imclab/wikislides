@@ -19,6 +19,7 @@
  * - //italic//
  * - == headers ==
  * - [[@<link>|<link text>]] generic links
+ * - -- horizontal rule
 */
 (function() {
 
@@ -73,6 +74,8 @@
     }
 
     var process_line = function(line) {
+        if (line == "--")
+            return [0, "<hr/>"];
         var level = 0;
             fresult = format_line(line),
             line = fresult[0],
