@@ -13,7 +13,8 @@
  *
  * Supported:
  * - * lists
- * - [[w|<keyword>]] - convert to wikimedia link
+ * - [[w|<keyword>]] - convert to wikimedia link (spanish by default)
+ * - [[w.<lang>|<keyword>]] - convert to wikimedia link with the specified language prefix
  * - [[l|<keyword>]] - convert to blog label link
  * - **bold**
  * - //italic//
@@ -39,7 +40,7 @@
     }
 
     var _LIST_RE = /^\*+/,
-        _WIKI_RE = /\[\[w\|(.+?)\]\]/g,
+        _WIKI_RE = /\[\[w(\.\w+)?\|(.+?)\]\]/g,
         _LABEL_RE = /\[\[l\|(.+?)\]\]/g,
         _HEADER_RE = /^(=+)(.+?)(=+)/,
         _BOLD_RE = /\*\*([^\*^\s][^\*]*?)\*\*/,
@@ -59,8 +60,10 @@
             };
             return line;
         });
-        line = line.replace(_WIKI_RE, function(m, l) {
-            return "<a target='_blank' href='http://es.wikipedia.com/wiki/" + l + "'>" + l +
+        line = line.replace(_WIKI_RE, function(m, lang, l) {
+            lang = lang? lang.slice(1) : "es";
+            console.log([m, lang, l]);
+            return "<a target='_blank' href='http://" + lang + ".wikipedia.com/wiki/" + l + "'>" + l +
                    "</a> <img class='wikiicon' src='http://dl.dropbox.com/u/12683952/plantae/slides/Wikipedia-icon16.png' />";
         });
         line = line.replace(_LABEL_RE, function(m, l) {
