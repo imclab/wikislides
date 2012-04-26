@@ -20,7 +20,7 @@
  * - //italic//
  * - == headers ==
  * - [[@<link>|<link text>]] generic links
- * - -- horizontal rule
+ * - ---- horizontal rule
  * - [<num>] superscript
 */
 (function() {
@@ -82,7 +82,7 @@
     }
 
     var process_line = function(line) {
-        if (line == "--")
+        if (line == "----")
             return [0, "<hr/>"];
         var level = 0;
             fresult = format_line(line),
