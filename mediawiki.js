@@ -13,6 +13,7 @@
  *
  * Supported:
  * - * lists
+ * - # numbered lists
  * - [[w|<keyword>]] - convert to wikimedia link (spanish by default)
  * - [[w.<lang>|<keyword>]] - convert to wikimedia link with the specified language prefix
  * - [[l|<keyword>]] - convert to blog label link
@@ -40,6 +41,7 @@
     }
 
     var _LIST_RE = /^\*+/,
+        _OLIST_RE = /^#+/,
         _WIKI_RE = /\[\[w(\.\w+)?\|(.+?)\]\]/g,
         _LABEL_RE = /\[\[l\|(.+?)\]\]/g,
         _HEADER_RE = /^(=+)(.+?)(=+)/,
@@ -62,7 +64,6 @@
         });
         line = line.replace(_WIKI_RE, function(m, lang, l) {
             lang = lang? lang.slice(1) : "es";
-            console.log([m, lang, l]);
             return "<a target='_blank' href='http://" + lang + ".wikipedia.com/wiki/" + l + "'>" + l +
                    "</a> <img class='wikiicon' src='http://dl.dropbox.com/u/12683952/plantae/slides/Wikipedia-icon16.png' />";
         });
@@ -83,41 +84,54 @@
 
     var process_line = function(line) {
         if (line == "----")
-            return [0, "<hr/>"];
-        var level = 0;
+            return [0, null, "<hr/>"];
+        var level=0,
+            ltype = null,
             fresult = format_line(line),
             line = fresult[0],
             insertParagraph = fresult[1];
         var m = _LIST_RE.exec(line);
+        var n = _OLIST_RE.exec(line);
         if (m) {
             level = m[0].length;
             line = line.replace(_LIST_RE, "");
+            ltype = "<ul>";
+        } else if (n) {
+            level = n[0].length;
+            line = line.replace(_OLIST_RE, "");
+            ltype = "<ol>";
         } else if (insertParagraph) line = "<p>" + line + "</p>";
-        return [level, line];
+        return [level, ltype, line];
     }
 
     var process_text = function(text) {
         var buff = "<style>.wikiicon {background:transparent !important;padding:0 !important;}</style>",
-            level = 0;
+            levels = [];
         text.split(/[\r\n]+/).forEach(function(line) {
             line = line.trim();
             if (line) {
                 var result = process_line(line);
-                var newlevel = result[0];
-                line = result[1];
+                var newlevel = result[0],
+                    level = levels.length,
+                    ltype = result[1];
+                line = result[2];
                 if (newlevel > level)
-                    buff = print(buff, stringMul("<ul>", newlevel - level));
+                    for (var i=0; i < newlevel - level; i++) {
+                        buff = print(buff, ltype);
+                        levels.push(ltype.replace("<", "</"));
+                    }
                 else if (newlevel < level)
-                    buff = print(buff, stringMul("</ul>", level - newlevel));
+                    for (var i=0; i < level - newlevel; i++)
+                        buff = print(buff, levels.pop());
                 if (newlevel > 0)
                     buff = print(buff, "<li>");
                 buff = print(buff, line);
                 if (newlevel > 0)
                     buff = print(buff, "</li>");
-                level = newlevel;
             }
         });
-        buff = print(buff, stringMul("</ul>", level));
+        while (levels.length)
+            buff = print(buff, levels.pop());
         return buff;
     }
 
