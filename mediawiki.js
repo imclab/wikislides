@@ -26,16 +26,6 @@
 */
 (function() {
 
-    stringMul = function(str, num) {
-            var acc = [];
-            for (var i = 0; (1 << i) <= num; i++) {
-                if ((1 << i) & num)
-                    acc.push(str);
-                str += str;
-            }
-            return acc.join("");
-    }
-
     print = function(buff, str) {
         return buff + str + "\n";
     }
