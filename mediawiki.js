@@ -43,10 +43,10 @@
         _WIKI_RE = /\[\[w(\.\w+)?\|(.+?)\]\]/g,
         _LABEL_RE = /\[\[l\|(.+?)\]\]/g,
         _HEADER_RE = /^(=+)(.+?)(=+)/,
-        _BOLD_RE = /\*\*([^\*^\s][^\*]*?)\*\*/,
-        _ITALIC_RE = /\/\/(.+?)\/\//,
-        _LINK_RE = /\[\[@(.+?)\|(.+?)\]\]/;
-        _SUP_RE = /\[(\d+)\]/
+        _BOLD_RE = /\*\*([^\*^\s][^\*]*?)\*\*/g,
+        _ITALIC_RE = /\/\/(.+?)\/\//g,
+        _LINK_RE = /\[\[@(.+?)\|(.+?)\]\]/g,
+        _SUP_RE = /\[(\d+)\]/g;
 
     var format_line = function(line) {
         var insertParagraph = true;
