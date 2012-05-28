@@ -40,11 +40,10 @@
         _LINK_RE = /\[\[@(.+?)\|(.+?)\]\]/g,
         _SUP_RE = /\[(\d+)\]/g;
 
+        _HTTP_RE = /(http:)(\/\/)?/g;
+
     var format_line = function(line) {
         var insertParagraph = true;
-        line = line.replace(_ITALIC_RE, function(m, l) {
-            return "<i>" + l + "</i>";
-        });
         line = line.replace(_HEADER_RE, function(m, p, l, s) {
             if (p.length == s.length && p.length < 6) {
                 insertParagraph = false;
@@ -62,6 +61,15 @@
         });
         line = line.replace(_LINK_RE, function(m, l, t) {
             return "<a target='_blank' href='" + l + "'>" + t + "</a>";
+        });
+        line = line.replace(_HTTP_RE, function(m, l) {
+            return l;
+        });
+        line = line.replace(_ITALIC_RE, function(m, l) {
+            return "<i>" + l + "</i>";
+        });
+        line = line.replace(_HTTP_RE, function(m, l) {
+            return l + "//";
         });
         line = line.replace(_BOLD_RE, function(m, l) {
             return "<b>" + l + "</b>";
