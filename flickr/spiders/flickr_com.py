@@ -95,6 +95,6 @@ class FlickrComSpider(CrawlSpider):
                 print >> buff, line
             print >> buff, "</p>"
 
-        self.log("key %s: %s" % (safekey, '<embed src="http://dl.dropbox.com/u/12683952/plantae/slides/%s.html" height="768" width="1000" />' % safekey))
+        self.log("key %s: %s" % (safekey, '<iframe src="http://dl.dropbox.com/u/12683952/plantae/slides/%s.html" height="768" width="978" ></iframe>' % safekey))
         buff.close()
 
